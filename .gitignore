@@ -3,3 +3,7 @@ artifacts
 build-ok
 /.java
 /gallery
+.gradle
+.idea
+/build/
+/btwsrc/
