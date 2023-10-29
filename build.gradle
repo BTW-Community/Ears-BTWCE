@@ -36,10 +36,10 @@ repositories {
 sourceSets {
     btw {
         java {
-            srcDirs = ['btwsrc/btw/java']
+            srcDirs = ['src/btw/java']
         }
         resources {
-            srcDirs = ['btwsrc/btw/resources']
+            srcDirs = ['src/btw/resources']
         }
     }
 }
