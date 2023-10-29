@@ -6,4 +6,4 @@ build-ok
 .gradle
 .idea
 /build/
-/btwsrc/
+/src/btw/
