@@ -1,9 +1,9 @@
-package net.fabricmc.example;
+package btw.community.ears.mod;
 
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import btw.community.example.ExampleAddon;
+import btw.community.ears.btwaddon.EarsBTWAddon;
 
-public class ExamplePreLaunchInitializer implements PreLaunchEntrypoint {
+public class EarsPreLaunchInit implements PreLaunchEntrypoint {
     /**
      * Runs the PreLaunch entrypoint to register BTW-Addon.
      * Don't initialize anything else here, use
@@ -11,6 +11,6 @@ public class ExamplePreLaunchInitializer implements PreLaunchEntrypoint {
      */
     @Override
     public void onPreLaunch() {
-        ExampleAddon.getInstance();
+        EarsBTWAddon.getInstance();
     }
 }

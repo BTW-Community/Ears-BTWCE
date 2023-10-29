@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "earsbtwce",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "Ears (BTWCE Fork)",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -13,20 +13,20 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/modid/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "init": [
-      "net.fabricmc.example.ExampleMod"
+    "client": [
+      "btw.community.ears.mod.EarsMod"
     ],
     "preLaunch": [
-      "net.fabricmc.example.ExamplePreLaunchInitializer"
+      "btw.community.ears.mod.EarsPreLaunchInit"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "earsbtwce.mixins.json"
   ],
 
   "depends": {

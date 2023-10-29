@@ -1,4 +1,4 @@
-package net.fabricmc.example.mixin;
+package btw.community.ears.mod.mixin;
 
 import btw.BTWAddon;
 import org.spongepowered.asm.mixin.Mixin;

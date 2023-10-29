@@ -1,12 +1,12 @@
-package btw.community.example;
+package btw.community.ears.btwaddon;
 
 import btw.AddonHandler;
 import btw.BTWAddon;
 
-public class ExampleAddon extends BTWAddon {
-    private static ExampleAddon instance;
+public class EarsBTWAddon extends BTWAddon {
+    private static EarsBTWAddon instance;
 
-    private ExampleAddon() {
+    private EarsBTWAddon() {
         super("Example Name", "0.1.0", "Ex");
     }
 
@@ -15,9 +15,9 @@ public class ExampleAddon extends BTWAddon {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
     }
 
-    public static ExampleAddon getInstance() {
+    public static EarsBTWAddon getInstance() {
         if (instance == null)
-            instance = new ExampleAddon();
+            instance = new EarsBTWAddon();
         return instance;
     }
 }
