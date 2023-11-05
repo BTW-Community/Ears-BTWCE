@@ -6,6 +6,10 @@
   "mixins": [
   ],
   "client": [
+    "EntityPlayerSPMixin",
+    "ImageBufferDownloadMixin",
+    "RenderPlayerAccessor",
+    "RenderPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

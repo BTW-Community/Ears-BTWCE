@@ -2,8 +2,6 @@ package com.unascribed.ears.api.features;
 
 import java.util.UUID;
 
-import org.teavm.jso.JSBody;
-
 import com.unascribed.ears.api.EarsFeaturesLookup;
 import com.unascribed.ears.api.Slice;
 
@@ -15,7 +13,7 @@ public class EarsFeatures {
 	private static final EarsFeaturesLookup lookup;
 	static {
 		EarsFeaturesLookup lookupTmp = null;
-		if (!isJs()) {
+		//if (!isJs()) {
 			try {
 				lookupTmp = (EarsFeaturesLookup)getLookupImpl();
 			} catch (Throwable t) {
@@ -23,7 +21,7 @@ public class EarsFeatures {
 				System.err.println("[Ears] Failed to load static feature lookup binder");
 				lookupTmp = null;
 			}
-		}
+	//	}
 		if (lookupTmp == null) {
 			lookupTmp = new EarsFeaturesLookup() {
 				
@@ -39,11 +37,6 @@ public class EarsFeatures {
 			};
 		}
 		lookup = lookupTmp;
-	}
-
-	@JSBody(script="return true")
-	private static boolean isJs() {
-		return false;
 	}
 	
 	private static Object getLookupImpl() throws Throwable {

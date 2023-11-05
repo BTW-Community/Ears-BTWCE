@@ -7,3 +7,13 @@ build-ok
 .idea
 /build/
 /src/btw/
+/src/main/resources/music/
+/src/main/resources/newmusic/
+/src/main/resources/newsound/
+/src/main/resources/pe/
+/src/main/resources/sound/step/
+/src/main/resources/sound3/
+/src/main/resources/streaming/
+/run/
+/release/
+/reobfuscated/

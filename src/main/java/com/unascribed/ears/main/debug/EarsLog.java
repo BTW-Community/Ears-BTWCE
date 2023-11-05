@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import btw.community.ears.mod.BTWEarsLogImpl;
 import com.unascribed.ears.main.EarsVersion;
 
 public class EarsLog {
@@ -59,8 +60,8 @@ public class EarsLog {
 		}
 	}
 	
-	public static final boolean DEBUG = EarsLogImpl.checkDebug();
-	private static final Set<String> ONLY_DEBUG = EarsLogImpl.checkOnlyDebug();
+	public static final boolean DEBUG = BTWEarsLogImpl.checkDebug();
+	private static final Set<String> ONLY_DEBUG = BTWEarsLogImpl.checkOnlyDebug();
 	
 	private static final Pattern BRACES_PATTERN = Pattern.compile("{}", Pattern.LITERAL);
 	private static final long START = System.nanoTime();
@@ -120,9 +121,9 @@ public class EarsLog {
 				PrintWriter pw = new PrintWriter(sw);
 				((Throwable)arg[arg.length-1]).printStackTrace(pw);
 				pw.flush();
-				EarsLogImpl.log(sw.toString().trim());
+				BTWEarsLogImpl.log(sw.toString().trim());
 			}
-			EarsLogImpl.log(EarsLogImpl.buildMsg(secs, millis, tag.toString(), buf.toString()));
+			BTWEarsLogImpl.log(BTWEarsLogImpl.buildMsg(secs, millis, tag.toString(), buf.toString()));
 		}
 	}
 	

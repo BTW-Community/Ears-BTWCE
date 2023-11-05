@@ -14,7 +14,7 @@
   },
 
   "license": "MIT",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/earsbtwce/icon.png",
 
   "environment": "client",
   "entrypoints": {
@@ -28,7 +28,6 @@
   "mixins": [
     "earsbtwce.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.7.4"
   },
