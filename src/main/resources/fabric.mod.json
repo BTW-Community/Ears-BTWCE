@@ -4,13 +4,12 @@
   "version": "${version}",
 
   "name": "Ears (BTWCE Fork)",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Partial backport of the 3.x Ears skinfix-fork.",
   "authors": [
-    "Me!"
+    "rin"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/cocona20xx/Ears-BTWCE"
   },
 
   "license": "MIT",

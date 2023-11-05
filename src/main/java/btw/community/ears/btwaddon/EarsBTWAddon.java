@@ -7,7 +7,7 @@ public class EarsBTWAddon extends BTWAddon {
     private static EarsBTWAddon instance;
 
     private EarsBTWAddon() {
-        super("Example Name", "0.1.0", "Ex");
+        super("Ears BTWCE Backport", "1.0", "ears");
     }
 
     @Override
