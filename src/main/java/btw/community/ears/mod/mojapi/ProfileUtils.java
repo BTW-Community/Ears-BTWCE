@@ -114,13 +114,6 @@ public final class ProfileUtils {
                                         byte[] decoded = Base64.getDecoder().decode(value);
                                         String valueDecoded = new String(decoded, StandardCharsets.UTF_8);
                                         profile = EarsMod.GSON.fromJson(valueDecoded, UserProfile.class);
-                                        //one last round of sanity checks for the road
-                                        if (!profile.getUsername().equals(username)) {
-                                            throw new IOException("Username mismatch between actual and decoded user profile.\nActual: " + username + "\nProfile: " + profile.getUsername());
-                                        }
-                                        if (!profile.getUuid().toString().equals(uuidStr)) {
-                                            throw new IOException("Uuid mismatch between previously fetched and decoded user profile.\nPrevious: " + uuidStr + "\nProfile:" + profile.getUuid());
-                                        }
                                     } else {
                                         throw new JsonParseException("Unexpected value in position 0 of properties json array (presumably malformed): " + propertyName.getAsString());
                                     }
