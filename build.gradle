@@ -71,6 +71,9 @@ dependencies {
     modImplementation("io.github.minecraft-cursed-legacy:cursed-fabric-loader:${loader_version}") {
         transitive false
     }
+    implementation 'com.google.code.gson:gson:2.10.1'
+    include 'com.google.code.gson:gson:2.10.1'
+
 }
 
 configurations {
