@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ProfileUtils {
 
     //TODO: SET TO FALSE IN PROD!!!
-    private static final boolean TESTING = true;
+    private static final boolean TESTING = false;
     private static final String testUsername = "_rin01";
     static final ConcurrentHashMap<String, UserProfile> userProfileCache = new ConcurrentHashMap<>();
 
@@ -64,7 +64,7 @@ public final class ProfileUtils {
         UserProfile profile = new UserProfile(); //'errored' profile. should always be overwritten unless something is rather broken
         try {
             String fetchUuidAddress = "https://api.mojang.com/users/profiles/minecraft/" + username;
-            String uuid = null;
+            String uuidStr = null;
             URL uuidURL = new URL(fetchUuidAddress);
             uuidConnection = (HttpURLConnection) uuidURL.openConnection();
             uuidConnection.setDoInput(true);
@@ -80,14 +80,14 @@ public final class ProfileUtils {
                     if (!sanityUser.equals(username.toLowerCase(Locale.ROOT))) {
                         throw new IOException("Username mismatch between actual and username in uuid fetch response.\n Actual: " + username + "\nFetched: " + sanityUser);
                     }
-                    uuid = uuidObj.get("id").getAsString();
+                    uuidStr = uuidObj.get("id").getAsString();
                 } else {
                     throw new JsonParseException("Presumably malformed json received while fetching uuid.");
                 }
             }
 
-            if (Objects.nonNull(uuid)) {
-                String fetchProfileAddress = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid;
+            if (Objects.nonNull(uuidStr)) {
+                String fetchProfileAddress = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuidStr;
                 URL profileURL = new URL(fetchProfileAddress);
                 profileConnection = (HttpURLConnection) profileURL.openConnection();
                 profileConnection.setDoInput(true);
@@ -100,7 +100,7 @@ public final class ProfileUtils {
                         JsonObject rootObj = rootJson.getAsJsonObject();
                         String sanityUuid = rootObj.get("id").getAsString();
                         String sanityUser = rootObj.get("name").getAsString().toLowerCase(Locale.ROOT);
-                        if (sanityUser.equals(username) && sanityUuid.equals(uuid)) {
+                        if (sanityUser.equals(username) && sanityUuid.equals(uuidStr)) {
                             JsonElement properties = rootObj.get("properties");
                             if (properties.isJsonArray()) {
                                 JsonArray propertiesArray = properties.getAsJsonArray(); //should only ever contain one entry
@@ -118,8 +118,8 @@ public final class ProfileUtils {
                                         if (!profile.getUsername().equals(username)) {
                                             throw new IOException("Username mismatch between actual and decoded user profile.\nActual: " + username + "\nProfile: " + profile.getUsername());
                                         }
-                                        if (!profile.getUuid().equals(uuid)) {
-                                            throw new IOException("Uuid mismatch between previously fetched and decoded user profile.\nPrevious: " + uuid + "\nProfile:" + profile.getUuid());
+                                        if (!profile.getUuid().toString().equals(uuidStr)) {
+                                            throw new IOException("Uuid mismatch between previously fetched and decoded user profile.\nPrevious: " + uuidStr + "\nProfile:" + profile.getUuid());
                                         }
                                     } else {
                                         throw new JsonParseException("Unexpected value in position 0 of properties json array (presumably malformed): " + propertyName.getAsString());
@@ -134,7 +134,7 @@ public final class ProfileUtils {
                             if (!sanityUser.toLowerCase(Locale.ROOT).equals(username.toLowerCase(Locale.ROOT))) {
                                 throw new IOException("Username mismatch between actual and user profile header.\nActual: " + username + "\nHeader: " + sanityUser);
                             } else {
-                                throw new IOException("Uuid mismatch between previously fetched and user profile header.\nPrevious: " + uuid + "\nHeader: " + sanityUuid);
+                                throw new IOException("Uuid mismatch between previously fetched and user profile header.\nPrevious: " + uuidStr + "\nHeader: " + sanityUuid);
                             }
                         }
                     }
