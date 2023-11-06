@@ -2,12 +2,13 @@ package btw.community.ears.btwaddon;
 
 import btw.AddonHandler;
 import btw.BTWAddon;
+import btw.community.ears.mod.EarsMod;
 
 public class EarsBTWAddon extends BTWAddon {
     private static EarsBTWAddon instance;
 
     private EarsBTWAddon() {
-        super("Ears BTWCE Backport", "1.0", "ears");
+        super("Ears BTWCE Backport", EarsMod.VERSION, "ears");
     }
 
     @Override

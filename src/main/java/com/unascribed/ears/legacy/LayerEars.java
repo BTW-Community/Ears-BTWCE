@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
-import java.util.UUID;
 
 import btw.community.ears.mod.EarsMod;
 import btw.community.ears.mod.mixin.RenderPlayerAccessor;
@@ -12,13 +11,9 @@ import btw.community.ears.mod.mojapi.ProfileUtils;
 import btw.community.ears.mod.mojapi.UserProfile;
 import com.unascribed.ears.api.features.EarsFeatures;
 import com.unascribed.ears.main.EarsCommon;
-import com.unascribed.ears.main.debug.EarsLog;
 import com.unascribed.ears.main.render.EarsRenderDelegate;
 import com.unascribed.ears.main.util.Decider;
 import com.unascribed.ears.normal.EarsFeaturesStorage;
-import net.fabricmc.loader.FabricLoaderImpl;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemArmor;
@@ -68,8 +63,8 @@ public class LayerEars {
 
         @Override
         protected EarsFeatures getEarsFeatures() {
-            if (EarsMod.earsSkinFeatures.containsKey(peer.skinUrl)) {
-                EarsFeatures feat = EarsMod.earsSkinFeatures.get(peer.skinUrl);
+            if (EarsMod.EARS_SKIN_FEATURES.containsKey(peer.skinUrl)) {
+                EarsFeatures feat = EarsMod.EARS_SKIN_FEATURES.get(peer.skinUrl);
                 UserProfile profile = ProfileUtils.getUserProfile(peer.username).orElse(null);
                 if (Objects.nonNull(profile)) {
                     EarsFeaturesStorage.INSTANCE.put(peer.username, profile.getUuid(), feat);

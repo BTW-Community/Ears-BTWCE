@@ -27,6 +27,7 @@
   "mixins": [
     "earsbtwce.mixins.json"
   ],
+  "accessWidener": "earsbtwce.accesswidener",
   "depends": {
     "fabricloader": ">=0.7.4"
   },

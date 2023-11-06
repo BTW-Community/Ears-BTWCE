@@ -25,14 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Environment(EnvType.CLIENT)
 public final class ProfileUtils {
-
-    //TODO: SET TO FALSE IN PROD!!!
     private static final boolean TESTING = false;
     private static final String testUsername = "_rin01";
     static final ConcurrentHashMap<String, UserProfile> userProfileCache = new ConcurrentHashMap<>();
 
     public static Optional<UserProfile> getUserProfile(String username) {
         String usernameActual = TESTING ? testUsername : username;
+        usernameActual = usernameActual.toLowerCase(Locale.ROOT);
         UserProfile possible;
         if (userProfileCache.containsKey(usernameActual)) {
             possible = userProfileCache.get(usernameActual);
@@ -55,13 +54,13 @@ public final class ProfileUtils {
      */
     @ApiStatus.Internal
     public static void addFakeProfile(UserProfile profile) {
-        userProfileCache.putIfAbsent(profile.getUsername(), profile);
+        userProfileCache.put(profile.getUsername(), profile);
     }
 
     private static void getProfileInner(String username) {
         HttpURLConnection uuidConnection = null;
         HttpURLConnection profileConnection = null;
-        UserProfile profile = new UserProfile(); //'errored' profile. should always be overwritten unless something is rather broken
+        UserProfile profile = new UserProfile(); //'errored' profile.
         try {
             String fetchUuidAddress = "https://api.mojang.com/users/profiles/minecraft/" + username;
             String uuidStr = null;
@@ -142,7 +141,7 @@ public final class ProfileUtils {
             if (profileConnection != null) {
                 profileConnection.disconnect();
             }
-            ProfileUtils.userProfileCache.put(username, profile);
+            ProfileUtils.userProfileCache.put(username.toLowerCase(Locale.ROOT), profile);
         }
     }
 

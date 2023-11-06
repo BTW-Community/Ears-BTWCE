@@ -107,6 +107,9 @@ public class UserProfile {
                                     }
                                 }
                             }
+                        } else {
+                            //default skin fallback
+                            isSlim = DefaultSkinHelper.getDefaultSkin(uuid).isSlim();
                         }
                         if (texturesObj.has("CAPE")) {
                             JsonElement cape = texturesObj.get("CAPE");

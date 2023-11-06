@@ -23,6 +23,7 @@ loom {
     if (System.getProperty("os.name").toLowerCase().contains("mac")) {
         runConfigs.named("client").get().getVmArgs().remove("-XstartOnFirstThread")
     }
+    accessWidener = file("src/main/resources/earsbtwce.accesswidener")
 }
 
 repositories {

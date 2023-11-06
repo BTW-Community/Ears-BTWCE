@@ -9,7 +9,8 @@
     "EntityPlayerSPMixin",
     "ImageBufferDownloadMixin",
     "RenderPlayerAccessor",
-    "RenderPlayerMixin"
+    "RenderPlayerMixin",
+    "ThreadDownloadImageMixin"
   ],
   "injectors": {
     "defaultRequire": 1
