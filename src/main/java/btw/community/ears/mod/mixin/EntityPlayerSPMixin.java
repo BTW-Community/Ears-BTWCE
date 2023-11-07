@@ -1,5 +1,7 @@
 package btw.community.ears.mod.mixin;
 
+import btw.community.ears.mod.mojapi.DefaultSkin;
+import btw.community.ears.mod.mojapi.DefaultSkinHelper;
 import btw.community.ears.mod.mojapi.ProfileUtils;
 import btw.community.ears.mod.mojapi.UserProfile;
 import net.minecraft.src.EntityPlayer;
@@ -25,7 +27,7 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer {
         if (Objects.isNull(profile)) {
             //fallback behavior: create a fake skinless profile
             UUID fallbackGen = UUID.randomUUID();
-            UserProfile fakeProfile = new UserProfile(fallbackGen, this.username, false, "", "");
+            UserProfile fakeProfile = new UserProfile(fallbackGen, this.username, DefaultSkinHelper.getDefaultSkin(fallbackGen).isSlim(), "", "");
             ProfileUtils.addFakeProfile(fakeProfile);
         }
     }

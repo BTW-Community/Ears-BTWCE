@@ -10,7 +10,8 @@
     "ImageBufferDownloadMixin",
     "RenderPlayerAccessor",
     "RenderPlayerMixin",
-    "ThreadDownloadImageMixin"
+    "ThreadDownloadImageMixin",
+    "NetClientHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

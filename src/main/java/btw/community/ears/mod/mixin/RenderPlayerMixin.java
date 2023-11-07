@@ -1,5 +1,6 @@
 package btw.community.ears.mod.mixin;
 
+import btw.community.ears.mod.mojapi.PlayerLogoutListener;
 import btw.community.ears.mod.mojapi.ProfileUtils;
 import btw.community.ears.mod.mojapi.UserProfile;
 import com.unascribed.ears.legacy.LayerEars;
@@ -7,7 +8,6 @@ import com.unascribed.ears.main.TranslucentBoxModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.ModelBase;
 import net.minecraft.src.ModelBiped;
 import net.minecraft.src.ModelRenderer;
@@ -20,17 +20,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 @Mixin(RenderPlayer.class)
-public abstract class RenderPlayerMixin extends RenderLiving implements RenderPlayerAccessor {
+public abstract class RenderPlayerMixin extends RenderLiving implements RenderPlayerAccessor, PlayerLogoutListener {
     @Shadow private ModelBiped modelBipedMain;
     @Unique private ModelRenderer slimLeftArm;
     @Unique private ModelRenderer slimRightArm;
-
-    @Unique private boolean didSlimCheck = false;
-    @Unique private boolean isSlim = false;
-
+    @Unique private final Map<String, Boolean> isSlimSkinMap = new HashMap<>();
     @Unique private RenderPlayer thisRenderer;
 
     @Unique private static final LayerEars layer = new LayerEars();
@@ -41,6 +41,7 @@ public abstract class RenderPlayerMixin extends RenderLiving implements RenderPl
 
     @Inject(method = "<init>()V", at = @At("TAIL"))
     public void earsbtwce$initInjector(CallbackInfo ci) {
+        this.registerListener(); //player logout listener registration
         this.thisRenderer = ((RenderPlayer) (Object) this); //hopefully this works
         ModelBiped model = new ModelBiped(0, 0, 64, 64);
         modelBipedMain = model;
@@ -68,31 +69,59 @@ public abstract class RenderPlayerMixin extends RenderLiving implements RenderPl
 
     @Inject(method = "preRenderCallback(Lnet/minecraft/src/EntityLiving;F)V", at = @At("HEAD"))
     public void earsbtwce$preRenderCallbackInjector(EntityLiving par1EntityLiving, float par2, CallbackInfo ci) {
-        if (!this.didSlimCheck) {
-            EntityPlayer player = (EntityPlayer) par1EntityLiving;
-            UserProfile profile = ProfileUtils.getUserProfile(player.username).orElse(null);
+        EntityPlayer player = (EntityPlayer) par1EntityLiving;
+        String usernameCaseInsensitive = player.username.toLowerCase(Locale.ROOT);
+        if (!this.isSlimSkinMap.containsKey(usernameCaseInsensitive)) {
+            UserProfile profile = ProfileUtils.getUserProfile(usernameCaseInsensitive).orElse(null);
             if (Objects.nonNull(profile)) {
-                this.isSlim = profile.isSlim();
+                this.isSlimSkinMap.put(usernameCaseInsensitive, profile.isSlim());
             }
-            this.didSlimCheck = true;
         }
-        if (this.isSlim) {
-            modelBipedMain.bipedRightArm = slimRightArm;
-            modelBipedMain.bipedLeftArm = slimLeftArm;
+        if (this.isSlimSkinMap.containsKey(usernameCaseInsensitive)) {
+            if (this.isSlimSkinMap.get(usernameCaseInsensitive)) {
+                if (!modelBipedMain.bipedLeftArm.equals(slimLeftArm)) {
+                    modelBipedMain.bipedLeftArm = slimLeftArm;
+                }
+                if (!modelBipedMain.bipedRightArm.equals(slimRightArm)) {
+                    modelBipedMain.bipedRightArm = slimRightArm;
+                }
+            }
         }
     }
 
     @Inject(method = "renderSpecials(Lnet/minecraft/src/EntityPlayer;F)V", at = @At("HEAD"))
     public void earsbtwce$renderSpecialsInjector(EntityPlayer player, float par2, CallbackInfo ci) {
         float partialTicks = Minecraft.getMinecraft().getTimer().renderPartialTicks;
-        EntityPlayerSP sp = (EntityPlayerSP)player;
-        layer.doRenderLayer(thisRenderer, sp,
-                sp.prevLimbYaw + (player.limbYaw - player.prevLimbYaw) * partialTicks,
+        layer.doRenderLayer(thisRenderer, player,
+                player.prevLimbYaw + (player.limbYaw - player.prevLimbYaw) * partialTicks,
                             partialTicks);
     }
 
-    @Inject(method = "renderFirstPersonArm(Lnet/minecraft/src/EntityPlayer;)V", at = @At("HEAD"))
-    public void earsbtwce$renderFirstPersonArmInjector(EntityPlayer par1EntityPlayer, CallbackInfo ci) {
-        layer.renderRightArm(thisRenderer, par1EntityPlayer);
+    @Inject(method = "renderFirstPersonArm(Lnet/minecraft/src/EntityPlayer;)V", at = @At("TAIL"))
+    public void earsbtwce$renderFirstPersonArmInjector(EntityPlayer player, CallbackInfo ci) {
+        String usernameCaseInsensitive = player.username.toLowerCase(Locale.ROOT);
+        if (!this.isSlimSkinMap.containsKey(usernameCaseInsensitive)) {
+            UserProfile profile = ProfileUtils.getUserProfile(usernameCaseInsensitive).orElse(null);
+            if (Objects.nonNull(profile)) {
+                this.isSlimSkinMap.put(usernameCaseInsensitive, profile.isSlim());
+            }
+        }
+        if (this.isSlimSkinMap.containsKey(usernameCaseInsensitive)) {
+            if (this.isSlimSkinMap.get(usernameCaseInsensitive)) {
+                if (!modelBipedMain.bipedLeftArm.equals(slimLeftArm)) {
+                    modelBipedMain.bipedLeftArm = slimLeftArm;
+                }
+                if (!modelBipedMain.bipedRightArm.equals(slimRightArm)) {
+                    modelBipedMain.bipedRightArm = slimRightArm;
+                }
+            }
+        }
+        float partialTicks = Minecraft.getMinecraft().getTimer().renderPartialTicks;
+        layer.renderRightArm(thisRenderer, player, partialTicks);
+    }
+
+    @Override
+    public void onPlayerLogout(String caselessUsername) {
+        this.isSlimSkinMap.remove(caselessUsername);
     }
 }

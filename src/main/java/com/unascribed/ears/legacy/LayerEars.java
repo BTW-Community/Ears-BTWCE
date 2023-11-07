@@ -38,9 +38,9 @@ public class LayerEars {
         delegate.render(entity);
     }
 
-    public void renderRightArm(RenderPlayer render, EntityPlayer entity) {
+    public void renderRightArm(RenderPlayer render, EntityPlayer entity, float partialTicks) {
         this.render = render;
-        this.tickDelta = 0;
+        this.tickDelta = partialTicks;
         delegate.render(entity, EarsRenderDelegate.BodyPart.RIGHT_ARM);
     }
 

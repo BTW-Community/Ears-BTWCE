@@ -1,7 +1,6 @@
 package btw.community.ears.mod.mojapi;
 
 import btw.AddonHandler;
-import btw.BTWMod;
 import btw.community.ears.mod.EarsMod;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,9 +17,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Environment(EnvType.CLIENT)
@@ -28,6 +29,8 @@ public final class ProfileUtils {
     private static final boolean TESTING = false;
     private static final String testUsername = "_rin01";
     static final ConcurrentHashMap<String, UserProfile> userProfileCache = new ConcurrentHashMap<>();
+
+    static final Set<PlayerLogoutListener> LISTENERS = new HashSet<>();
 
     public static Optional<UserProfile> getUserProfile(String username) {
         String usernameActual = TESTING ? testUsername : username;
@@ -44,9 +47,11 @@ public final class ProfileUtils {
         }
         return Optional.ofNullable(possible);
     }
-    public static boolean removeUserProfile(String username) {
-        UserProfile temp = userProfileCache.remove(username);
-        return Objects.nonNull(temp);
+    public static void removeUserProfile(String username) {
+        userProfileCache.remove(username.toLowerCase(Locale.ROOT));
+        for(PlayerLogoutListener listener : LISTENERS) {
+            listener.onPlayerLogout(username.toLowerCase(Locale.ROOT));
+        }
     }
 
     /**

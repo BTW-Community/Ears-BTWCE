@@ -23,8 +23,12 @@ import org.spongepowered.asm.mixin.Unique;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -80,7 +84,6 @@ public class ThreadDownloadImageMixin {
                     if (!hasSkin) {
                         // default skin impl
                         DefaultSkin skin = null;
-                        File defaultSkinFile;
                         if (Objects.isNull(profile)) {
                             // create 'fake' profile if no profile currently exists
                             UUID fakeUuid = UUID.randomUUID();
@@ -95,19 +98,22 @@ public class ThreadDownloadImageMixin {
                            if (Objects.isNull(skin)) {
                                skin = DefaultSkinHelper.getDefaultSkin(profile.getUuid());
                            }
-                           defaultSkinFile = container.getPath(skin.getLocation()).toFile();
-                           if (Objects.isNull(this.buffer)) {
-                               this.imageData.image = ImageIO.read(defaultSkinFile);
-                           } else {
-                               this.imageData.image = this.buffer.parseUserSkin(ImageIO.read(defaultSkinFile));
-                           }
+                           Path defaultSkinPath = container.getPath(skin.getLocation());
+                            try (InputStream defaultSkinStream = Files.newInputStream(defaultSkinPath)) {
+                                if (Objects.isNull(this.buffer)) {
+                                    this.imageData.image = ImageIO.read(defaultSkinStream);
+                                } else {
+                                    this.imageData.image = this.buffer.parseUserSkin(ImageIO.read(defaultSkinStream));
+                                }
+                            }
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                AddonHandler.logger.log(Level.WARNING, e.getMessage());
+                String stack = Arrays.toString(e.getStackTrace());
+                AddonHandler.logWarning(e.getMessage() + "\n" + stack);
             }
             finally
             {
